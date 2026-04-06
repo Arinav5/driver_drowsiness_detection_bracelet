@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 import mediapipe as mp
+from drowsy_detection import distance, get_ear, calculate_avg_ear
 
-# MediaPipe FaceMesh setup
+#MediaPipe FaceMesh setup
 mp_facemesh = mp.solutions.face_mesh
 mp_drawing = mp.solutions.drawing_utils
 denormalize_coordinates = mp_drawing._normalized_to_pixel_coordinates
@@ -34,6 +35,20 @@ with mp_facemesh.FaceMesh(static_image_mode=True, max_num_faces=1) as face_mesh:
 # Convert back to BGR for OpenCV display
 image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
+landmark_0 = results.multi_face_landmarks[0].landmark[0]
+print(landmark_0)
+ 
+landmark_0_x = landmark_0.x * img_w
+landmark_0_y = landmark_0.y * img_h
+landmark_0_z = landmark_0.z * img_w # according to documentation
+ 
+print()
+print("X:", landmark_0_x)
+print("Y:", landmark_0_y)
+print("Z:", landmark_0_z)
+ 
+print()
+print("Total Length of '.landmark':", len(results.multi_face_landmarks[0].landmark))
 # Show the image in a window
 cv2.imshow("Eye Landmarks", image_bgr)
 cv2.waitKey(0)  # Wait until you press a key
